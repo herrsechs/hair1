@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#fff5f5f5">
+
+    <!--<cn.sharesdk.framework.TitleLayout-->
+    <!--android:id="@+id/llTitle"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@drawable/auth_title_back" />-->
+    <cn.sharesdk.socialization.QuickCommentBar
+        android:id="@+id/qcBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/background_floating_material_light" />
+    <cn.sharesdk.socialization.component.CommentListView
+        android:id="@+id/CommentListview"
+        android:layout_width="fill_parent"
+        android:layout_height="200dp"
+        android:layout_above="@id/qcBar" />
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/CommentListview"
+        >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/ivIllustration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/question" />
+
+            <TextView
+                android:id="@+id/tvText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="all"
+                android:padding="10dp"
+                android:text="share_content"
+                android:textColor="#ff383838"
+                android:textSize="17dp" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+
+
+
+
+</RelativeLayout>
