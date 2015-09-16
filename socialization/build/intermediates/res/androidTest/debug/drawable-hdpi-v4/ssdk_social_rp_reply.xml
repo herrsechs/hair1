@@ -3,4 +3,4 @@
     <item android:state_pressed="true" android:drawable="@drawable/ssdk_social_rp_reply_pre" />
 	<item android:drawable="@drawable/ssdk_social_rp_reply_nor" />
 </selector>
-<!-- From: file:/C:/Users/LLLLLyj/Desktop/hair_temp_9_14/hair/socialization/src/main/res/drawable-hdpi/ssdk_social_rp_reply.xml --><!-- From: file:/C:/Users/LLLLLyj/Desktop/hair_temp_9_14/hair/socialization/build/intermediates/bundles/debug/res/drawable-hdpi-v4/ssdk_social_rp_reply.xml -->
+<!-- From: file:/I:/android/project/hair1/socialization/src/main/res/drawable-hdpi/ssdk_social_rp_reply.xml --><!-- From: file:/I:/android/project/hair1/socialization/build/intermediates/bundles/debug/res/drawable-hdpi-v4/ssdk_social_rp_reply.xml -->

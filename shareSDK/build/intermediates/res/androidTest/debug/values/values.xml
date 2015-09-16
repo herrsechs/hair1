@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/LLLLLyj/Desktop/hair_temp_9_14/hair/shareSDK/build/intermediates/bundles/debug/res/values/values.xml -->
+    <!-- From: file:/I:/android/project/hair1/shareSDK/build/intermediates/bundles/debug/res/values/values.xml -->
     <eat-comment/>
     <string name="alipay">支付宝朋友</string>
     <string name="alipay_client_inavailable">目前您的支付宝版本过低或未安装，需要安装支付宝才能使用</string>

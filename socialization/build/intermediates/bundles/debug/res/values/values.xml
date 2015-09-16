@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/LLLLLyj/Desktop/hair_temp_9_14/hair/socialization/src/main/res/values/ssdk_social_strings.xml -->
+    <!-- From: file:/I:/android/project/hair1/socialization/src/main/res/values/ssdk_social_strings.xml -->
     <eat-comment/>
     <string name="ssdk_socialization_auth_failed">授权失败</string>
     <string name="ssdk_socialization_bind_account">绑定帐号</string>

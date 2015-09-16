@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
@@ -20,13 +21,16 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.loopj.android.http.RequestParams;
 
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Date;
 
 import sse.tongji.hair.R;
 import sse.tongji.hair.adapter.HaircutItemAdapter;
@@ -39,9 +43,11 @@ import sse.tongji.hair.httpclient.ImageUploadTask;
 public class PersonCenterActivity extends AppCompatActivity{
     private int itemPos = 0;
 
-    private static final int CODE_GALLERY_REQUEST = 0xa0;
-    private static final int CODE_CAMERA_REQUEST = 0xa1;
-    private static final int CODE_RESULT_REQUEST = 0xa2;
+    public static final int CODE_GALLERY_REQUEST = 0xa0;
+    public static final int CODE_CAMERA_REQUEST = 0xa1;
+    public static final int CODE_RESULT_REQUEST = 0xa2;
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
 
     public RecyclerView welcomeRecyclerView;
     public RecyclerView haircutRecyclerView;
@@ -52,6 +58,7 @@ public class PersonCenterActivity extends AppCompatActivity{
     private ListView lvLeftMenu;
     private String[] lvs = {"center", "recommend", "info", "settings"};
     public HaircutItemAdapter hAdapter;
+    public ImageView selfImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -81,7 +88,8 @@ public class PersonCenterActivity extends AppCompatActivity{
         plusFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                choseHeadImageFromGallery();
+                //choseHeadImageFromGallery();
+                chooseHeadImageFromCamera();
             }
         });
 
@@ -103,6 +111,9 @@ public class PersonCenterActivity extends AppCompatActivity{
         };
         mDrawerToggle.syncState();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        selfImage = (ImageView)findViewById(R.id.self_image);
+
     }
 
     @Override
@@ -153,10 +164,23 @@ public class PersonCenterActivity extends AppCompatActivity{
         startActivityForResult(intentFromGallery, CODE_GALLERY_REQUEST);
     }
 
+    private void chooseHeadImageFromCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //intent.setType("image/*");
+        //intent.setAction(Intent.ACTION_CAMERA_BUTTON);
+        //String fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE).toString(); // create a file to save the image
+        //intent.putExtra("ImageName", fileUri); // set the image file name
+
+        // start the image capture Intent
+        startActivityForResult(intent, CODE_CAMERA_REQUEST);
+    }
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-
+        //Bundle bundle = getIntent().getExtras();
+        //Log.d("Debug", "Uri: " + bundle.getString("ImageName"));
         if(requestCode == CODE_GALLERY_REQUEST){
             if(data == null){
                 Log.d("Debug", "Gallery image is empty!");
@@ -164,43 +188,65 @@ public class PersonCenterActivity extends AppCompatActivity{
             }
             try {
                 File image = new File(getRealFilePath(this, data.getData()));
-                /*
-                RequestParams params = new RequestParams();
-                params.put("Img", image);
-                params.put("username", "bigbang");
-
-                AliCloudClient.get("upload", null, new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        Log.d("Debug", "Http Succeed");
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        Log.d("Debug", error.toString());
-                    }
-                });
-                */
-                /*
-                AliCloudClient.post("upload", params, new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        Log.d("Debug","Done uploading image.");
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        Log.d("Debug",error.toString());
-                    }
-                });
-                */
                 ImageUploadTask iut = new ImageUploadTask();
                 iut.execute(image);
             }
             catch(Exception e){
                 e.printStackTrace();
             }
+        }else if(requestCode == CODE_CAMERA_REQUEST){
+            if(data == null){
+                Log.d("Debug", "Camera image is empty!");
+                return;
+            }else {
+                //File image = new File(getRealFilePath(this, data.getData()));
+                if(selfImage == null){
+                    Log.d("Debug", "Self image is null");
+                }else if(data.getData() == null) {
+                    Log.d("Debug", "getData is null");
+
+                }else{
+                    selfImage.setImageURI(data.getData());
+                }
+            }
         }
+    }
+
+    /** Create a file Uri for saving an image or video */
+    private static Uri getOutputMediaFileUri(int type){
+        return Uri.fromFile(getOutputMediaFile(type));
+    }
+
+    /** Create a File for saving an image or video */
+    private static File getOutputMediaFile(int type){
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "MyCameraApp");
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()) if (!mediaStorageDir.mkdirs()) {
+            Log.d("MyCameraApp", "failed to create directory");
+            return null;
+        }
+
+        // Create a media file name
+        String timeStamp = new Date().toString();
+        File mediaFile;
+        if (type == MEDIA_TYPE_IMAGE){
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "IMG_"+ timeStamp + ".jpg");
+        } else if(type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "VID_"+ timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
     }
 
     public static String getRealFilePath( final Context context, final Uri uri ) {

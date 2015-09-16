@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/C:/Users/LLLLLyj/Desktop/hair_temp_9_14/hair/shareSDK/build/intermediates/bundles/debug/res/values-en/values-en.xml -->
+    <!-- From: file:/I:/android/project/hair1/shareSDK/build/intermediates/bundles/debug/res/values-en/values-en.xml -->
     <eat-comment/>
     <string name="alipay">Alipay</string>
     <string name="alipay_client_inavailable">Alipay client not exists or the version is too low</string>
