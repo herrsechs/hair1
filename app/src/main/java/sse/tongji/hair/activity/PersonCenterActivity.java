@@ -59,14 +59,15 @@ public class PersonCenterActivity extends AppCompatActivity{
     private String[] lvs = {"center", "recommend", "info", "settings"};
     public HaircutItemAdapter hAdapter;
     public ImageView selfImage;
+    public ImageView testImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.left_menu);
-        welcomeRecyclerView = (RecyclerView)findViewById(R.id.welcome_recycler_view);
-        welcomeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        welcomeRecyclerView.setAdapter(new WelcomeAdapter(this));
+        //welcomeRecyclerView = (RecyclerView)findViewById(R.id.welcome_recycler_view);
+        //welcomeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //welcomeRecyclerView.setAdapter(new WelcomeAdapter(this));
 
         haircutRecyclerView = (RecyclerView)findViewById(R.id.haircut_recycler_view);
         haircutRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -84,12 +85,15 @@ public class PersonCenterActivity extends AppCompatActivity{
             }
         });
 
+        selfImage = (ImageView)findViewById(R.id.self_image);
+        //testImage = (ImageView)findViewById(R.id.testImage);
+
         plusFAB = (FloatingActionButton)findViewById(R.id.haircut_fab);
         plusFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //choseHeadImageFromGallery();
-                chooseHeadImageFromCamera();
+                choseHeadImageFromGallery();
+                //chooseHeadImageFromCamera();
             }
         });
 
@@ -112,7 +116,7 @@ public class PersonCenterActivity extends AppCompatActivity{
         mDrawerToggle.syncState();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-        selfImage = (ImageView)findViewById(R.id.self_image);
+
 
     }
 
@@ -190,6 +194,12 @@ public class PersonCenterActivity extends AppCompatActivity{
                 File image = new File(getRealFilePath(this, data.getData()));
                 ImageUploadTask iut = new ImageUploadTask();
                 iut.execute(image);
+                if(null == selfImage){
+                    Log.d("Debug", "null self image");
+                }else {
+                    selfImage.setImageURI(data.getData());
+                    //testImage.setImageURI(data.getData());
+                }
             }
             catch(Exception e){
                 e.printStackTrace();

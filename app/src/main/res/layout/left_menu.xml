@@ -20,12 +20,8 @@
 
                 <include layout="@layout/toolbar"></include>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/welcome_recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="144dp">
 
-                </android.support.v7.widget.RecyclerView>
+                <include layout="@layout/welcom"/>
 
 
                 <TextView
@@ -51,7 +47,7 @@
                 android:clickable="true"
                 android:src="@drawable/ic_add"
                 app:borderWidth="0dp"
-                app:layout_anchor="@id/welcome_recycler_view"
+
                 app:layout_anchorGravity="bottom|right|end" />
 
         </android.support.design.widget.CoordinatorLayout>
