@@ -36,6 +36,7 @@ import sse.tongji.hair.R;
 import sse.tongji.hair.adapter.HaircutItemAdapter;
 import sse.tongji.hair.adapter.WelcomeAdapter;
 import sse.tongji.hair.httpclient.ImageUploadTask;
+import sse.tongji.hair.listener.RecyclerItemClickListener;
 
 /**
  * Created by lenovo on 2015/8/25.
@@ -73,17 +74,18 @@ public class PersonCenterActivity extends AppCompatActivity{
         haircutRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         hAdapter = new HaircutItemAdapter(this);
         haircutRecyclerView.setAdapter(hAdapter);
-        hAdapter.setOnItemClickListener(new HaircutItemAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                itemPos = position;
-            }
 
+        /**
+         * Invoke addOnItemTouchListener() to listen to the recycler view item click event
+         * Implement RecyclerItemClickListener in Listener package
+         */
+        haircutRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, new RecyclerItemClickListener.onItemClickListener(){
             @Override
-            public void onItemLongClick(View view, int position) {
+            public void onItemClick(View view, int position){
                 itemPos = position;
+                //Log.d("Debug", "Clicked " + String.valueOf(position));
             }
-        });
+        }));
 
         selfImage = (ImageView)findViewById(R.id.self_image);
         //testImage = (ImageView)findViewById(R.id.testImage);
