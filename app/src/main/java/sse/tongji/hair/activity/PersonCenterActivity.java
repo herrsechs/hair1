@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +64,7 @@ public class PersonCenterActivity extends AppCompatActivity{
     public HaircutItemAdapter hAdapter;
     public ImageView selfImage;
     public ImageView testImage;
+    public SelectPicPopUpWindow menuWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -94,7 +98,9 @@ public class PersonCenterActivity extends AppCompatActivity{
         plusFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                choseHeadImageFromGallery();
+                menuWindow = new SelectPicPopUpWindow(PersonCenterActivity.this, popUpListener);
+                menuWindow.showAtLocation(PersonCenterActivity.this.findViewById(R.id.dl_left), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0,0);
+                //choseHeadImageFromGallery();
                 //chooseHeadImageFromCamera();
             }
         });
@@ -194,13 +200,25 @@ public class PersonCenterActivity extends AppCompatActivity{
             }
             try {
                 File image = new File(getRealFilePath(this, data.getData()));
-                ImageUploadTask iut = new ImageUploadTask();
-                iut.execute(image);
+                //ImageUploadTask iut = new ImageUploadTask();
+                //iut.execute(image);
+                Log.d("Debug", image.getPath());
                 if(null == selfImage){
                     Log.d("Debug", "null self image");
                 }else {
-                    selfImage.setImageURI(data.getData());
-                    //testImage.setImageURI(data.getData());
+
+                    String path = getRealFilePath(this, data.getData());
+                    //BitmapFactory.Options opt = new BitmapFactory.Options();
+                    //opt.inJustDecodeBounds = true;
+                    //Bitmap bmp  = BitmapFactory.decodeFile(getRealFilePath(this, data.getData()), opt);
+                    Bitmap bmp = getPhotoBitmap(path);
+                    try{
+                        //Log.d("Debug", "I got here");
+                        selfImage.setImageBitmap(bmp);
+                    }catch(OutOfMemoryError error){
+                        Log.e("Debug", "Image out of memory");
+                        error.printStackTrace();
+                    }
                 }
             }
             catch(Exception e){
@@ -214,11 +232,16 @@ public class PersonCenterActivity extends AppCompatActivity{
                 //File image = new File(getRealFilePath(this, data.getData()));
                 if(selfImage == null){
                     Log.d("Debug", "Self image is null");
-                }else if(data.getData() == null) {
-                    Log.d("Debug", "getData is null");
-
                 }else{
-                    selfImage.setImageURI(data.getData());
+                    //selfImage.setImageURI(data.getData());
+                    String path = getRealFilePath(this, data.getData());
+                    Bitmap bmp = getPhotoBitmap(path);
+                    try{
+                        selfImage.setImageBitmap(bmp);
+                    }catch(OutOfMemoryError error){
+                        Log.e("Debug", "Image out of memory");
+                        error.printStackTrace();
+                    }
                 }
             }
         }
@@ -283,5 +306,29 @@ public class PersonCenterActivity extends AppCompatActivity{
         }
         return data;
     }
+
+    public Bitmap getPhotoBitmap(String path){
+        Bitmap bmp = BitmapFactory.decodeFile(path);
+        int height = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
+        Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, height, true);
+        return scaled;
+    }
+
+    public View.OnClickListener popUpListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            menuWindow.dismiss();
+            switch (view.getId()){
+                case R.id.popup_pick_from_gallery:
+                    choseHeadImageFromGallery();
+                    break;
+                case R.id.popup_pick_from_photo:
+                    chooseHeadImageFromCamera();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 }
 
